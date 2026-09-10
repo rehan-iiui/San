@@ -14,8 +14,8 @@ body {
   background: #111;
 }
 
-body {
-  cursor: crosshair;
+button {
+  font: inherit;
 }
 
 /* =========================
@@ -37,13 +37,192 @@ body {
 #sky {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
-      to bottom,
-      #48a9ed 0%,
-      #8bd6ff 48%,
-      #d9f3ff 72%
+  overflow: hidden;
+  background: linear-gradient(
+    to bottom,
+    #48a9ed 0%,
+    #8bd6ff 48%,
+    #d9f3ff 72%
+  );
+
+  transition:
+    background 1.5s ease,
+    filter 1.5s ease;
+}
+
+/* =========================
+   SUN
+========================= */
+
+#sun {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+
+  right: 12%;
+  top: 12%;
+
+  border-radius: 50%;
+
+  background: #ffd83d;
+
+  box-shadow:
+    0 0 35px rgba(255, 216, 61, 0.7),
+    0 0 80px rgba(255, 216, 61, 0.35);
+
+  transition:
+    opacity 1s ease,
+    transform 1.5s ease;
+}
+
+/* =========================
+   MOON
+========================= */
+
+#moon {
+  position: absolute;
+
+  width: 70px;
+  height: 70px;
+
+  right: 14%;
+  top: 14%;
+
+  border-radius: 50%;
+
+  background: #f3f3d0;
+
+  box-shadow:
+    0 0 25px rgba(255,255,220,0.6);
+
+  opacity: 0;
+
+  transition: opacity 1.5s ease;
+}
+
+/* =========================
+   CLOUDS
+========================= */
+
+#cloudLayer {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  transition: opacity 1s ease;
+}
+
+#cloudLayer::before,
+#cloudLayer::after {
+  content: "";
+
+  position: absolute;
+
+  width: 220px;
+  height: 65px;
+
+  border-radius: 50px;
+
+  background: rgba(255,255,255,0.8);
+
+  box-shadow:
+    50px -20px 0 10px rgba(255,255,255,0.8),
+    100px 0 0 5px rgba(255,255,255,0.8);
+
+  animation: cloudMove 35s linear infinite;
+}
+
+#cloudLayer::before {
+  top: 17%;
+  left: -300px;
+}
+
+#cloudLayer::after {
+  top: 30%;
+  left: -600px;
+
+  transform: scale(0.75);
+
+  animation-duration: 50s;
+}
+
+@keyframes cloudMove {
+
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(100vw + 900px));
+  }
+
+}
+
+/* =========================
+   RAIN
+========================= */
+
+#rainLayer {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  opacity: 0;
+
+  background-image:
+    repeating-linear-gradient(
+      105deg,
+      transparent 0px,
+      transparent 9px,
+      rgba(255,255,255,0.55) 10px,
+      transparent 11px,
+      transparent 18px
     );
+
+  background-size: 22px 30px;
+
+  animation: rainFall 0.45s linear infinite;
+
+  transition: opacity 0.8s ease;
+}
+
+@keyframes rainFall {
+
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: -20px 60px;
+  }
+
+}
+
+/* =========================
+   FOG
+========================= */
+
+#fogLayer {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  opacity: 0;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(255,255,255,0.65),
+      rgba(255,255,255,0.15),
+      transparent 70%
+    );
+
+  backdrop-filter: blur(3px);
+
+  transition: opacity 1s ease;
 }
 
 /* =========================
@@ -52,12 +231,18 @@ body {
 
 #world {
   position: absolute;
+
   left: 50%;
   top: 48%;
+
   width: 900px;
   height: 600px;
+
   transform: translate(-50%, -50%);
+
   perspective: 700px;
+
+  transition: filter 1.5s ease;
 }
 
 /* =========================
@@ -66,8 +251,10 @@ body {
 
 .ground {
   position: absolute;
+
   left: 50%;
   top: 42%;
+
   width: 900px;
   height: 600px;
 
@@ -104,14 +291,16 @@ body {
 
 .object {
   position: absolute;
-  transform-style: preserve-3d;
 }
 
 .cube {
   width: 80px;
   height: 80px;
+
   background: #d89b52;
+
   border: 3px solid #9b652c;
+
   box-shadow:
     8px 12px 0 rgba(0,0,0,0.18);
 }
@@ -124,6 +313,7 @@ body {
 .cube2 {
   left: 510px;
   top: 310px;
+
   width: 65px;
   height: 65px;
 }
@@ -131,6 +321,7 @@ body {
 .cube3 {
   left: 220px;
   top: 340px;
+
   width: 55px;
   height: 55px;
 }
@@ -141,6 +332,7 @@ body {
 
 .tree {
   position: absolute;
+
   width: 90px;
   height: 180px;
 }
@@ -157,27 +349,108 @@ body {
 
 .trunk {
   position: absolute;
+
   bottom: 0;
   left: 35px;
+
   width: 25px;
   height: 85px;
+
   background: #79502f;
+
   border: 2px solid #5d3a20;
 }
 
 .leaves {
   position: absolute;
+
   top: 0;
   left: 5px;
+
   width: 80px;
   height: 100px;
+
   background: #25833b;
+
   border-radius: 50%;
+
   border: 3px solid #17652b;
+
   box-shadow:
     0 12px 0 #1c7132,
     10px 5px 0 #2e9144,
     -10px 8px 0 #2e9144;
+}
+
+/* =========================
+   PLAYER
+========================= */
+
+#player {
+  position: absolute;
+
+  left: 450px;
+  top: 300px;
+
+  width: 42px;
+  height: 78px;
+
+  z-index: 15;
+
+  transform: translate(-50%, -50%);
+
+  transition: transform 0.08s linear;
+}
+
+.player-head {
+  position: absolute;
+
+  left: 11px;
+  top: 0;
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+
+  background: #dca579;
+
+  border: 2px solid #9c6b4a;
+}
+
+.player-body {
+  position: absolute;
+
+  left: 8px;
+  top: 20px;
+
+  width: 26px;
+  height: 32px;
+
+  background: #315b9b;
+
+  border-radius: 5px;
+}
+
+.player-leg {
+  position: absolute;
+
+  top: 50px;
+
+  width: 10px;
+  height: 27px;
+
+  background: #30343b;
+
+  border-radius: 3px;
+}
+
+.player-leg.left {
+  left: 8px;
+}
+
+.player-leg.right {
+  right: 8px;
 }
 
 /* =========================
@@ -186,22 +459,24 @@ body {
 
 #crosshair {
   position: absolute;
+
   left: 50%;
   top: 50%;
 
   transform: translate(-50%, -50%);
 
+  color: white;
+
   font-size: 27px;
   font-weight: bold;
-
-  color: white;
 
   text-shadow:
     0 0 4px black,
     0 0 8px black;
 
   pointer-events: none;
-  z-index: 20;
+
+  z-index: 30;
 }
 
 /* =========================
@@ -210,10 +485,11 @@ body {
 
 #hud {
   position: absolute;
+
   top: 18px;
   left: 18px;
 
-  z-index: 30;
+  z-index: 40;
 
   color: white;
 
@@ -224,6 +500,7 @@ body {
 .hud-title {
   font-size: 20px;
   font-weight: bold;
+
   letter-spacing: 2px;
 }
 
@@ -246,18 +523,98 @@ body {
   backdrop-filter: blur(5px);
 }
 
-#coordinates {
-  margin-top: 10px;
-
-  font-size: 13px;
+#coordinates,
+#weatherStatus,
+#timeStatus {
+  margin-top: 8px;
 
   padding: 6px 9px;
 
   width: max-content;
 
+  font-size: 13px;
+
   background: rgba(0,0,0,0.35);
 
   border-radius: 6px;
+
+  backdrop-filter: blur(5px);
+}
+
+/* =========================
+   WEATHER PANEL
+========================= */
+
+#weatherPanel {
+  position: absolute;
+
+  right: 18px;
+  top: 18px;
+
+  width: 175px;
+
+  padding: 12px;
+
+  background: rgba(20,20,20,0.72);
+
+  border: 1px solid rgba(255,255,255,0.2);
+
+  border-radius: 13px;
+
+  backdrop-filter: blur(12px);
+
+  z-index: 50;
+}
+
+.panel-title {
+  margin-bottom: 8px;
+
+  color: white;
+
+  font-size: 12px;
+  font-weight: bold;
+
+  letter-spacing: 1.5px;
+}
+
+.weatherButton,
+#dayNightButton {
+  display: block;
+
+  width: 100%;
+
+  margin-top: 6px;
+
+  padding: 9px;
+
+  border: 1px solid rgba(255,255,255,0.15);
+
+  border-radius: 8px;
+
+  background: rgba(255,255,255,0.08);
+
+  color: white;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+.weatherButton:hover,
+#dayNightButton:hover {
+  background: rgba(255,255,255,0.18);
+
+  transform: translateX(-2px);
+}
+
+.weatherButton.active {
+  background: rgba(255,255,255,0.25);
+
+  border-color: white;
 }
 
 /* =========================
@@ -285,7 +642,7 @@ body {
 
   backdrop-filter: blur(12px);
 
-  z-index: 40;
+  z-index: 60;
 }
 
 #toolbar button {
@@ -329,10 +686,6 @@ body {
   border-color: white;
 }
 
-/* =========================
-   DELETE BUTTON
-========================= */
-
 #deleteMode {
   background: rgba(180,40,40,0.35) !important;
 }
@@ -351,7 +704,7 @@ body {
   left: 20px;
   bottom: 25px;
 
-  z-index: 50;
+  z-index: 70;
 
   display: none;
 }
@@ -386,43 +739,139 @@ body {
 }
 
 /* =========================
+   NIGHT MODE
+========================= */
+
+#game.night #sky {
+  background:
+    linear-gradient(
+      to bottom,
+      #07132e 0%,
+      #101d42 50%,
+      #18213a 100%
+    );
+}
+
+#game.night #sun {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+#game.night #moon {
+  opacity: 1;
+}
+
+#game.night .ground {
+  filter: brightness(0.48);
+}
+
+#game.night #world {
+  filter: brightness(0.65);
+}
+
+/* =========================
+   WEATHER STATES
+========================= */
+
+#game.weather-cloudy #sky {
+  background:
+    linear-gradient(
+      to bottom,
+      #71899b,
+      #aab8c0 55%,
+      #c8d0d2
+    );
+}
+
+#game.weather-cloudy #sun {
+  opacity: 0.25;
+}
+
+#game.weather-cloudy #cloudLayer {
+  opacity: 1;
+}
+
+#game.weather-rain #sky {
+  background:
+    linear-gradient(
+      to bottom,
+      #465767,
+      #788894 55%,
+      #9ba7ad
+    );
+}
+
+#game.weather-rain #sun {
+  opacity: 0;
+}
+
+#game.weather-rain #cloudLayer {
+  opacity: 1;
+}
+
+#game.weather-rain #rainLayer {
+  opacity: 1;
+}
+
+#game.weather-rain #world {
+  filter: brightness(0.75);
+}
+
+#game.weather-fog #sky {
+  background:
+    linear-gradient(
+      to bottom,
+      #aab4b7,
+      #cbd1d1
+    );
+}
+
+#game.weather-fog #sun {
+  opacity: 0.15;
+}
+
+#game.weather-fog #fogLayer {
+  opacity: 1;
+}
+
+#game.weather-fog #world {
+  filter: blur(1px) brightness(0.8);
+}
+
+/* =========================
    RESPONSIVE
 ========================= */
 
 @media (max-width: 700px) {
 
-  #toolbar {
-    bottom: 15px;
+  #weatherPanel {
+    right: 8px;
+    top: 8px;
 
-    transform: translateX(-50%) scale(0.85);
+    width: 145px;
+
+    transform: scale(0.85);
+    transform-origin: top right;
   }
 
   #hud {
-    top: 10px;
-    left: 10px;
+    top: 8px;
+    left: 8px;
   }
 
   .hud-info {
     display: none;
   }
 
+  #toolbar {
+    bottom: 12px;
+
+    transform:
+      translateX(-50%)
+      scale(0.8);
+  }
+
   #controls {
     display: block;
   }
-
-  .tree1 {
-    left: 50px;
-  }
-
-  .tree2 {
-    left: 600px;
-  }
-}
-
-/* =========================
-   DISABLED / HIDDEN
-========================= */
-
-.hidden {
-  display: none !important;
 }
