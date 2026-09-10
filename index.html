@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sandbox Simulator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Main Game -->
+  <div id="game">
+
+    <!-- Sky -->
+    <div id="sky"></div>
+
+    <!-- World -->
+    <div id="world">
+
+      <div class="ground"></div>
+
+      <div class="object cube cube1"></div>
+      <div class="object cube cube2"></div>
+      <div class="object cube cube3"></div>
+
+      <div class="tree tree1">
+        <div class="trunk"></div>
+        <div class="leaves"></div>
+      </div>
+
+      <div class="tree tree2">
+        <div class="trunk"></div>
+        <div class="leaves"></div>
+      </div>
+
+    </div>
+
+    <!-- Crosshair -->
+    <div id="crosshair">+</div>
+
+    <!-- HUD -->
+    <div id="hud">
+
+      <div class="hud-title">
+        SANDBOX SIMULATOR
+      </div>
+
+      <div class="hud-info">
+        <span>WASD Move</span>
+        <span>SPACE Jump</span>
+        <span>Mouse Look</span>
+      </div>
+
+      <div id="coordinates">
+        X: 0 &nbsp; Y: 0 &nbsp; Z: 0
+      </div>
+
+    </div>
+
+    <!-- Object toolbar -->
+    <div id="toolbar">
+
+      <button class="tool active" data-object="cube">
+        🧱
+        <span>Cube</span>
+      </button>
+
+      <button class="tool" data-object="tree">
+        🌳
+        <span>Tree</span>
+      </button>
+
+      <button class="tool" data-object="ball">
+        ⚽
+        <span>Ball</span>
+      </button>
+
+      <button class="tool" data-object="crate">
+        📦
+        <span>Crate</span>
+      </button>
+
+      <button id="deleteMode">
+        🗑️
+        <span>Delete</span>
+      </button>
+
+    </div>
+
+    <!-- Controls -->
+    <div id="controls">
+
+      <div class="control-row">
+        <button data-key="w">W</button>
+      </div>
+
+      <div class="control-row">
+        <button data-key="a">A</button>
+        <button data-key="s">S</button>
+        <button data-key="d">D</button>
+      </div>
+
+      <button id="jumpButton">SPACE</button>
+
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
