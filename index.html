@@ -9,17 +9,23 @@
 
 <body>
 
-  <!-- Main Game -->
   <div id="game">
 
-    <!-- Sky -->
-    <div id="sky"></div>
+    <!-- SKY / WEATHER -->
+    <div id="sky">
+      <div id="sun"></div>
+      <div id="moon"></div>
+      <div id="cloudLayer"></div>
+      <div id="rainLayer"></div>
+      <div id="fogLayer"></div>
+    </div>
 
-    <!-- World -->
+    <!-- WORLD -->
     <div id="world">
 
       <div class="ground"></div>
 
+      <!-- Existing objects -->
       <div class="object cube cube1"></div>
       <div class="object cube cube2"></div>
       <div class="object cube cube3"></div>
@@ -34,9 +40,17 @@
         <div class="leaves"></div>
       </div>
 
+      <!-- Player -->
+      <div id="player">
+        <div class="player-head"></div>
+        <div class="player-body"></div>
+        <div class="player-leg left"></div>
+        <div class="player-leg right"></div>
+      </div>
+
     </div>
 
-    <!-- Crosshair -->
+    <!-- CROSSHAIR -->
     <div id="crosshair">+</div>
 
     <!-- HUD -->
@@ -53,12 +67,49 @@
       </div>
 
       <div id="coordinates">
-        X: 0 &nbsp; Y: 0 &nbsp; Z: 0
+        X: 450 &nbsp; Y: 300 &nbsp; Z: 0
+      </div>
+
+      <div id="weatherStatus">
+        ☀️ Sunny
+      </div>
+
+      <div id="timeStatus">
+        🕛 12:00 PM
       </div>
 
     </div>
 
-    <!-- Object toolbar -->
+    <!-- WEATHER PANEL -->
+    <div id="weatherPanel">
+
+      <div class="panel-title">
+        WEATHER
+      </div>
+
+      <button class="weatherButton active" data-weather="sunny">
+        ☀️ Sunny
+      </button>
+
+      <button class="weatherButton" data-weather="cloudy">
+        ☁️ Cloudy
+      </button>
+
+      <button class="weatherButton" data-weather="rain">
+        🌧️ Rain
+      </button>
+
+      <button class="weatherButton" data-weather="fog">
+        🌫️ Fog
+      </button>
+
+      <button id="dayNightButton">
+        🌙 Night
+      </button>
+
+    </div>
+
+    <!-- OBJECT TOOLBAR -->
     <div id="toolbar">
 
       <button class="tool active" data-object="cube">
@@ -88,7 +139,7 @@
 
     </div>
 
-    <!-- Controls -->
+    <!-- MOBILE CONTROLS -->
     <div id="controls">
 
       <div class="control-row">
@@ -101,7 +152,9 @@
         <button data-key="d">D</button>
       </div>
 
-      <button id="jumpButton">SPACE</button>
+      <button id="jumpButton">
+        SPACE
+      </button>
 
     </div>
 
