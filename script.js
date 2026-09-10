@@ -1,6 +1,6 @@
 // ==========================================
 // SANDBOX SIMULATOR
-// VERSION 1
+// WEATHER + PLAYER + OBJECT SYSTEM
 // ==========================================
 
 const game = document.getElementById("game");
@@ -10,44 +10,71 @@ const coordinates = document.getElementById("coordinates");
 const tools = document.querySelectorAll(".tool");
 const deleteModeButton = document.getElementById("deleteMode");
 
-let selectedObject = "cube";
-let deleteMode = false;
+const weatherButtons =
+  document.querySelectorAll(".weatherButton");
+
+const dayNightButton =
+  document.getElementById("dayNightButton");
+
+const weatherStatus =
+  document.getElementById("weatherStatus");
+
+const timeStatus =
+  document.getElementById("timeStatus");
+
+
+// ==========================================
+// PLAYER
+// ==========================================
 
 let player = {
   x: 450,
   y: 300,
   z: 0,
+
   speed: 4,
+
   jumpPower: 12,
   verticalSpeed: 0,
+
   onGround: true
 };
 
+
+// ==========================================
+// CONTROLS
+// ==========================================
+
 const keys = {};
 
-let mouseX = 0;
-let mouseY = 0;
+let selectedObject = "cube";
+let deleteMode = false;
 
-let cameraX = 0;
-let cameraY = 0;
+let isNight = false;
+
+let currentWeather = "sunny";
 
 
 // ==========================================
 // KEYBOARD
 // ==========================================
 
-document.addEventListener("keydown", function (event) {
+document.addEventListener("keydown", function(event) {
 
   keys[event.key.toLowerCase()] = true;
 
   if (event.code === "Space") {
+
     event.preventDefault();
+
     jump();
+
   }
 
 });
 
-document.addEventListener("keyup", function (event) {
+
+document.addEventListener("keyup", function(event) {
 
   keys[event.key.toLowerCase()] = false;
 
@@ -77,10 +104,19 @@ function updatePlayer() {
   }
 
 
-  // Keep player inside the sandbox
+  // World boundaries
 
-  player.x = Math.max(50, Math.min(850, player.x));
-  player.y = Math.max(120, Math.min(500, player.y));
+  player.x =
+    Math.max(
+      50,
+      Math.min(850, player.x)
+    );
+
+  player.y =
+    Math.max(
+      120,
+      Math.min(500, player.y)
+    );
 
 
   // Gravity
@@ -91,10 +127,13 @@ function updatePlayer() {
 
     player.z += player.verticalSpeed;
 
+
     if (player.z <= 0) {
 
       player.z = 0;
+
       player.verticalSpeed = 0;
+
       player.onGround = true;
 
     }
@@ -102,8 +141,34 @@ function updatePlayer() {
   }
 
 
+  updatePlayerVisual();
+
   updateCamera();
+
   updateCoordinates();
+
+}
+
+
+// ==========================================
+// PLAYER VISUAL
+// ==========================================
+
+function updatePlayerVisual() {
+
+  const playerElement =
+    document.getElementById("player");
+
+  if (!playerElement) {
+    return;
+  }
+
+
+  playerElement.style.left =
+    `${player.x}px`;
+
+  playerElement.style.top =
+    `${player.y - player.z}px`;
 
 }
 
@@ -119,7 +184,9 @@ function jump() {
   }
 
   player.onGround = false;
-  player.verticalSpeed = player.jumpPower;
+
+  player.verticalSpeed =
+    player.jumpPower;
 
 }
 
@@ -130,11 +197,18 @@ function jump() {
 
 function updateCamera() {
 
-  cameraX = player.x - 450;
-  cameraY = player.y - 300;
+  const cameraX =
+    player.x - 450;
+
+  const cameraY =
+    player.y - 300;
+
 
   world.style.transform =
-    `translate(calc(-50% - ${cameraX}px), calc(-50% - ${cameraY}px))`;
+    `translate(
+      calc(-50% - ${cameraX}px),
+      calc(-50% - ${cameraY}px)
+    )`;
 
 }
 
@@ -146,7 +220,9 @@ function updateCamera() {
 function updateCoordinates() {
 
   coordinates.textContent =
-    `X: ${Math.round(player.x)}   Y: ${Math.round(player.y)}   Z: ${Math.round(player.z)}`;
+    `X: ${Math.round(player.x)}   ` +
+    `Y: ${Math.round(player.y)}   ` +
+    `Z: ${Math.round(player.z)}`;
 
 }
 
@@ -155,21 +231,29 @@ function updateCoordinates() {
 // OBJECT SELECTION
 // ==========================================
 
-tools.forEach(function (tool) {
+tools.forEach(function(tool) {
 
-  tool.addEventListener("click", function () {
+  tool.addEventListener("click", function() {
 
-    tools.forEach(function (item) {
+    tools.forEach(function(item) {
+
       item.classList.remove("active");
+
     });
+
 
     tool.classList.add("active");
 
-    selectedObject = tool.dataset.object;
+
+    selectedObject =
+      tool.dataset.object;
+
 
     deleteMode = false;
 
-    deleteModeButton.classList.remove("active");
+    deleteModeButton.classList.remove(
+      "active"
+    );
 
   });
 
@@ -180,17 +264,28 @@ tools.forEach(function (tool) {
 // DELETE MODE
 // ==========================================
 
-deleteModeButton.addEventListener("click", function () {
+deleteModeButton.addEventListener(
+  "click",
+  function() {
 
-  deleteMode = !deleteMode;
+    deleteMode =
+      !deleteMode;
 
-  deleteModeButton.classList.toggle("active", deleteMode);
 
-  tools.forEach(function (tool) {
-    tool.classList.remove("active");
-  });
+    deleteModeButton.classList.toggle(
+      "active",
+      deleteMode
+    );
 
-});
+
+    tools.forEach(function(tool) {
+
+      tool.classList.remove("active");
+
+    });
+
+  }
+);
 
 
 // ==========================================
@@ -203,69 +298,92 @@ function createObject(x, y) {
     return;
   }
 
-  const object = document.createElement("div");
 
-  object.classList.add("spawned-object");
-
-  object.dataset.type = selectedObject;
-
-  object.style.left = `${x}px`;
-  object.style.top = `${y}px`;
+  const object =
+    document.createElement("div");
 
 
-  // Cube
+  object.classList.add(
+    "spawned-object"
+  );
+
+
+  object.dataset.type =
+    selectedObject;
+
+
+  object.style.left =
+    `${x}px`;
+
+  object.style.top =
+    `${y}px`;
+
+
+  // CUBE
 
   if (selectedObject === "cube") {
 
-    object.classList.add("spawned-cube");
+    object.classList.add(
+      "spawned-cube"
+    );
 
   }
 
 
-  // Tree
+  // TREE
 
   if (selectedObject === "tree") {
 
-    object.classList.add("spawned-tree");
+    object.classList.add(
+      "spawned-tree"
+    );
 
-    object.innerHTML =
-      `
+
+    object.innerHTML = `
       <div class="spawned-trunk"></div>
       <div class="spawned-leaves"></div>
-      `;
+    `;
 
   }
 
 
-  // Ball
+  // BALL
 
   if (selectedObject === "ball") {
 
-    object.classList.add("spawned-ball");
+    object.classList.add(
+      "spawned-ball"
+    );
 
   }
 
 
-  // Crate
+  // CRATE
 
   if (selectedObject === "crate") {
 
-    object.classList.add("spawned-crate");
+    object.classList.add(
+      "spawned-crate"
+    );
 
   }
 
 
-  object.addEventListener("click", function (event) {
+  object.addEventListener(
+    "click",
+    function(event) {
 
-    event.stopPropagation();
+      event.stopPropagation();
 
-    if (deleteMode) {
 
-      object.remove();
+      if (deleteMode) {
+
+        object.remove();
+
+      }
 
     }
-
-  });
+  );
 
 
   world.appendChild(object);
@@ -277,53 +395,210 @@ function createObject(x, y) {
 // WORLD CLICK
 // ==========================================
 
-world.addEventListener("click", function (event) {
+world.addEventListener(
+  "click",
+  function(event) {
 
-  if (deleteMode) {
-    return;
+    if (deleteMode) {
+      return;
+    }
+
+
+    if (
+      event.target.closest(
+        ".spawned-object"
+      )
+    ) {
+      return;
+    }
+
+
+    const rect =
+      world.getBoundingClientRect();
+
+
+    const x =
+      event.clientX -
+      rect.left;
+
+
+    const y =
+      event.clientY -
+      rect.top;
+
+
+    createObject(x, y);
+
+  }
+);
+
+
+// ==========================================
+// WEATHER
+// ==========================================
+
+function setWeather(weather) {
+
+  currentWeather = weather;
+
+
+  game.classList.remove(
+    "weather-sunny",
+    "weather-cloudy",
+    "weather-rain",
+    "weather-fog"
+  );
+
+
+  game.classList.add(
+    `weather-${weather}`
+  );
+
+
+  weatherButtons.forEach(
+    function(button) {
+
+      button.classList.remove(
+        "active"
+      );
+
+
+      if (
+        button.dataset.weather ===
+        weather
+      ) {
+
+        button.classList.add(
+          "active"
+        );
+
+      }
+
+    }
+  );
+
+
+  const names = {
+
+    sunny: "☀️ Sunny",
+
+    cloudy: "☁️ Cloudy",
+
+    rain: "🌧️ Rain",
+
+    fog: "🌫️ Fog"
+
+  };
+
+
+  weatherStatus.textContent =
+    names[weather] || "☀️ Sunny";
+
+}
+
+
+// ==========================================
+// WEATHER BUTTONS
+// ==========================================
+
+weatherButtons.forEach(
+  function(button) {
+
+    button.addEventListener(
+      "click",
+      function() {
+
+        setWeather(
+          button.dataset.weather
+        );
+
+      }
+    );
+
+  }
+);
+
+
+// ==========================================
+// DAY / NIGHT
+// ==========================================
+
+function toggleDayNight() {
+
+  isNight = !isNight;
+
+
+  game.classList.toggle(
+    "night",
+    isNight
+  );
+
+
+  if (isNight) {
+
+    timeStatus.textContent =
+      "🌙 10:00 PM";
+
+    dayNightButton.textContent =
+      "☀️ Day";
+
+  } else {
+
+    timeStatus.textContent =
+      "☀️ 12:00 PM";
+
+    dayNightButton.textContent =
+      "🌙 Night";
+
   }
 
+}
 
-  // Don't create objects when clicking existing objects
 
-  if (
-    event.target.classList.contains("spawned-object") ||
-    event.target.closest(".spawned-object")
-  ) {
-    return;
+dayNightButton.addEventListener(
+  "click",
+  toggleDayNight
+);
+
+
+// ==========================================
+// MOUSE
+// ==========================================
+
+game.addEventListener(
+  "mousemove",
+  function(event) {
+
+    const centerX =
+      window.innerWidth / 2;
+
+    const centerY =
+      window.innerHeight / 2;
+
+
+    const lookX =
+      (event.clientX - centerX) * 0.02;
+
+    const lookY =
+      (event.clientY - centerY) * 0.01;
+
+
+    game.style.setProperty(
+      "--look-x",
+      `${lookX}px`
+    );
+
+    game.style.setProperty(
+      "--look-y",
+      `${lookY}px`
+    );
+
   }
-
-
-  const rect = world.getBoundingClientRect();
-
-  const x =
-    event.clientX -
-    rect.left;
-
-  const y =
-    event.clientY -
-    rect.top;
-
-
-  createObject(x, y);
-
-});
+);
 
 
 // ==========================================
-// MOUSE LOOK
-// ==========================================
-
-game.addEventListener("mousemove", function (event) {
-
-  mouseX = event.clientX;
-  mouseY = event.clientY;
-
-});
-
-
-// ==========================================
-// MOBILE BUTTONS
+// MOBILE CONTROLS
 // ==========================================
 
 const controlButtons =
@@ -332,74 +607,93 @@ const controlButtons =
   );
 
 
-controlButtons.forEach(function (button) {
+controlButtons.forEach(
+  function(button) {
 
-  const key =
-    button.dataset.key;
-
-
-  button.addEventListener("mousedown", function () {
-    keys[key] = true;
-  });
-
-  button.addEventListener("mouseup", function () {
-    keys[key] = false;
-  });
-
-  button.addEventListener("mouseleave", function () {
-    keys[key] = false;
-  });
+    const key =
+      button.dataset.key;
 
 
-  button.addEventListener("touchstart", function (event) {
+    button.addEventListener(
+      "mousedown",
+      function() {
 
-    event.preventDefault();
+        keys[key] = true;
 
-    keys[key] = true;
+      }
+    );
 
-  });
+
+    button.addEventListener(
+      "mouseup",
+      function() {
+
+        keys[key] = false;
+
+      }
+    );
 
 
-  button.addEventListener("touchend", function (event) {
+    button.addEventListener(
+      "mouseleave",
+      function() {
 
-    event.preventDefault();
+        keys[key] = false;
 
-    keys[key] = false;
+      }
+    );
 
-  });
 
-});
+    button.addEventListener(
+      "touchstart",
+      function(event) {
+
+        event.preventDefault();
+
+        keys[key] = true;
+
+      }
+    );
+
+
+    button.addEventListener(
+      "touchend",
+      function(event) {
+
+        event.preventDefault();
+
+        keys[key] = false;
+
+      }
+    );
+
+  }
+);
 
 
 const jumpButton =
-  document.getElementById("jumpButton");
+  document.getElementById(
+    "jumpButton"
+  );
 
 
-jumpButton.addEventListener("click", function () {
+jumpButton.addEventListener(
+  "click",
+  function() {
 
-  jump();
+    jump();
 
-});
-
-
-// ==========================================
-// GAME LOOP
-// ==========================================
-
-function gameLoop() {
-
-  updatePlayer();
-
-  requestAnimationFrame(gameLoop);
-
-}
+  }
+);
 
 
 // ==========================================
-// EXTRA SPAWNED OBJECT STYLES
+// SPAWNED OBJECT STYLES
 // ==========================================
 
-const extraStyles = document.createElement("style");
+const extraStyles =
+  document.createElement("style");
+
 
 extraStyles.textContent = `
 
@@ -415,7 +709,8 @@ extraStyles.textContent = `
   height: 65px;
   background: #d89b52;
   border: 3px solid #9b652c;
-  box-shadow: 8px 10px 0 rgba(0,0,0,0.2);
+  box-shadow:
+    8px 10px 0 rgba(0,0,0,0.2);
 }
 
 .spawned-ball {
@@ -424,7 +719,8 @@ extraStyles.textContent = `
   border-radius: 50%;
   background: #e9e9e9;
   border: 3px solid #777;
-  box-shadow: 7px 9px 0 rgba(0,0,0,0.2);
+  box-shadow:
+    7px 9px 0 rgba(0,0,0,0.2);
 }
 
 .spawned-crate {
@@ -447,7 +743,8 @@ extraStyles.textContent = `
     ),
     #b87938;
   border: 4px solid #71431d;
-  box-shadow: 8px 10px 0 rgba(0,0,0,0.2);
+  box-shadow:
+    8px 10px 0 rgba(0,0,0,0.2);
 }
 
 .spawned-tree {
@@ -482,13 +779,42 @@ extraStyles.textContent = `
 
 `;
 
-document.head.appendChild(extraStyles);
+
+document.head.appendChild(
+  extraStyles
+);
+
+
+// ==========================================
+// INITIAL WEATHER
+// ==========================================
+
+setWeather("sunny");
+
+
+// ==========================================
+// GAME LOOP
+// ==========================================
+
+function gameLoop() {
+
+  updatePlayer();
+
+  requestAnimationFrame(
+    gameLoop
+  );
+
+}
 
 
 // ==========================================
 // START
 // ==========================================
 
+updatePlayer();
+
 gameLoop();
 
-console.log("Sandbox Simulator started successfully.");
+console.log(
+  "Sandbox Simulator loaded successfully."
+);
